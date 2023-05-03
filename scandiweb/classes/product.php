@@ -110,10 +110,11 @@ protected $price;
           }
 
 
-        // validation for name - only strings support
+        
+        // validation for name - after strings support numbers
         public function validateInputDataName($name)
         {
-            $name_pattern = '/^[A-Za-z\s]+$/';
+             $name_pattern = '/^[A-Za-z][A-Za-z0-9\s]*$/';
           if (!preg_match($name_pattern, $name)){
             throw new Exinvalidname();
           }
