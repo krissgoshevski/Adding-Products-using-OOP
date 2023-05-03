@@ -49,7 +49,7 @@ $insval->getAllProducts();
             echo "<div class='inputContainer'>";
             echo '<label>SKU: ' . $product['sku'] . '</label> ';
             echo '<label>Name: ' . $product['name'] . '</label> ';
-            echo '<label>Price: ' . $product['price'] . '</label> ';
+            echo '<label>Price: ' . $product['price'] . '$' . '</label> ';
             echo '<label>Size: ' . $product['size_cd'] . '(MB)'. '</label> </div> </div>';}
 
     else if(!is_null($product['height_f']) && !is_null($product['width_f']) && !is_null($product['length_f'])){
@@ -58,7 +58,7 @@ $insval->getAllProducts();
             echo "<div class='inputContainer'>";
             echo '<label>SKU: ' . $product['sku'] . '</label> ';
             echo '<label>Name: ' . $product['name'] . '</label> ';
-            echo '<label>Price: ' . $product['price'] . '</label> ';
+            echo '<label>Price: ' . $product['price'] . '$' . '</label> ';
             echo '<label> Dimensions: '.$product['width_f'].'x'.$product['length_f'].'x'.$product['height_f'].'</label> </div> </div>';}
           
           else{
@@ -67,7 +67,7 @@ $insval->getAllProducts();
             echo "<div class='inputContainer'>";
             echo '<label>SKU: ' . $product['sku'] . '</label> ';
             echo '<label>Name: ' . $product['name'] . '</label> ';
-            echo '<label>Price: ' . $product['price'] . '</label> ';
+            echo '<label>Price: ' . $product['price'] . '$' . '</label> ';
             echo '<label>Size: ' . $product['weight_book'] . '(KG)'. '</label> </div> </div>';}
           }
 
