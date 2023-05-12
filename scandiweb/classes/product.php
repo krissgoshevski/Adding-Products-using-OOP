@@ -27,10 +27,8 @@ private $conn;
 private $category;
 private $sku;
 private $name;
-private $price;
-        
-private description;
-        
+private $price;        
+private $description;        
 private $size;
 private  $width;
 private  $heigh;
