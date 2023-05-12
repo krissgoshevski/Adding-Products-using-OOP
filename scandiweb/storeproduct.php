@@ -1,7 +1,7 @@
 
-<?php 
+<?php
 session_start();
-if(isset( $_POST['category_id_fk'])){
+if(isset($_POST['category_id_fk'])){
     $category = $_POST['category_id_fk'];
 }
 if(isset($_POST['cancel'])){
@@ -73,12 +73,14 @@ use MyExceptions\ExuniqueSku;
     header("Location: newlist.php"); die();
 } else 
   {
-        $cd->validateSize($size);
-        $fur->validateDimensions($height, $width, $length);
-        $book->validateWeight($weight);
+   
 
-        list($height, $width, $length) = $dimensions;
-        ($height === NULL && $width === NULL && $length === NULL) ?: $dimensions = NULL;
+      $size = $cd->validateSize($size);
+      $dimensions = $fur->validateDimensions($height, $width, $length);
+      $weight = $book->validateWeight($weight);
+
+       // list($height, $width, $length) = $dimensions;
+       // ($height === NULL && $width === NULL && $length === NULL) ?: $dimensions = NULL;
 
     try {
         $insval->setCategory($category);
@@ -164,9 +166,6 @@ use MyExceptions\ExuniqueSku;
         header("Location: newlist.php?status=addednewProduct=$name"); die();
     }
 
-
-    header("Location: createproduct.php?status=error");
-    die();
 }
 ?>
 
