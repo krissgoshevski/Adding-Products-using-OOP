@@ -33,6 +33,7 @@ private $size;
 private  $width;
 private  $heigh;
 private $length;
+private $weight;
 
 
         // construct for connection with database
