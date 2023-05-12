@@ -73,17 +73,16 @@ use MyExceptions\ExuniqueSku;
     header("Location: newlist.php"); die();
 } else 
   {
-    
-        $size = Cd::validateSize($size);
-        $dimensions = Furniture::validateDimensions($height, $width, $length);
-        $weight = Book::validateWeight($weight);
+        $cd->validateSize($size);
+        $fur->validateDimensions($height, $width, $length);
+        $book->validateWeight($weight);
 
         list($height, $width, $length) = $dimensions;
         ($height === NULL && $width === NULL && $length === NULL) ?: $dimensions = NULL;
 
     try {
         $insval->setCategory($category);
-        InsertValidate::validateForm($category, $sku, $name, $price, $size, $width, $height, $length, $weight);
+        $insval->validateForm($category, $sku, $name, $price, $size, $width, $height, $length, $weight);
         $insval->validateSkuUnique($sku);
         $insval->setSku($sku);
         $insval->setName($name);
