@@ -31,7 +31,7 @@ private $price;
 private $description;        
 private $size;
 private  $width;
-private  $heigh;
+private  $height;
 private $length;
 private $weight;
 
@@ -183,7 +183,7 @@ private $weight;
 
 
               // checking if is picked one of first three values from drop-down menu// required all data 
-          public static function validateForm($category, $sku, $name, $price, $size = null, $width = null, $height = null, $length = null, $weight = null) 
+          public function validateForm($category, $sku, $name, $price, $size = null, $width = null, $height = null, $length = null, $weight = null) 
           {
               $this->category = $category;
               $this->sku = $sku;
@@ -229,9 +229,9 @@ private $weight;
 
   
             // if size is empty give null value  
-            public static function validateSize($size) 
+            public function validateSize($size) 
             {
-                    $this->size = $size;
+                $this->size = $size;
                     
               if ($this->size == '') {
                 return NULL;
@@ -239,21 +239,24 @@ private $weight;
                return $this->size;
             }
             // if fur inputs are empty, then return all as null 
-            public static function validateDimensions($height, $width, $length) 
+            public function validateDimensions($height, $width, $length) 
             {
-              if ($height === '' && $width === '' && $length === '') {
+              $this->height = $height;
+              $this->width = $width;
+              $this->length = $length;
+
+              if ($this->height === '' && $this->width === '' && $this->length === '') {
                   return array(NULL, NULL, NULL);
               }
-              return array($height ?: NULL, $width ?: NULL, $length ?: NULL); // но ако некоја димензија е празен знак, таа димензија се заменува со NULL.
+              return array($this->height ?: NULL, $this->width ?: NULL, $this->length ?: NULL); // но ако некоја димензија е празен знак, таа димензија се заменува со NULL.
             }
 
 
 
               // also if is empty weight return null 
-              public static function validateWeight($weight) 
-              {
-                      $this->weight = $weight;
-                      
+              public function validateWeight($weight) 
+              {   
+                $this->weight = $weight;
                 if ($this->weight == '') {
                   return NULL;
                 }
@@ -264,7 +267,7 @@ private $weight;
               // insert categories in db' cat table
             public function insertCategory($categoryname) 
             {
-                    $this->category = $categoryname;
+              $this->category = $categoryname;
                     
               $conn = $this->conn;
               $sql_insert = "INSERT INTO category (name) VALUES(:name)";
