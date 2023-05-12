@@ -23,11 +23,19 @@ use MyExceptions\ExinvalidWeight;
 
 abstract class ProductValidator implements AbstractMethods {
 
-protected $conn;
-protected $category;
-protected $sku;
-protected $name;
-protected $price;
+private $conn;
+private $category;
+private $sku;
+private $name;
+private $price;
+        
+private description;
+        
+private $size;
+private  $width;
+private  $heigh;
+private $length;
+
 
         // construct for connection with database
         public function __construct($conn)
@@ -47,11 +55,12 @@ protected $price;
         // validation for Sku characters
         public function setSku($sku)
         {
-            if(strlen($sku) != 9){  
+             $this->sku = $sku;
+            if(strlen($this->sku) != 9){  
               $ex = new requiredsku();
               throw $ex;
             }
-              $this->sku = $sku;
+             
               return $this;
           }
 
@@ -60,9 +69,11 @@ protected $price;
       // validation for unique Sku
         public function validateSkuUnique($sku)
         {
+                $this->sku = $sku;
+                
             $conn = $this->conn;
             $stmt = $conn->prepare("SELECT * FROM products WHERE sku = :sku");
-            $stmt->bindParam(":sku", $sku);
+            $stmt->bindParam(":sku", $this->sku);
             $stmt->execute();
             if ($stmt->rowCount() > 0) {
                 throw new ExuniqueSku();
@@ -93,18 +104,20 @@ protected $price;
           // firstly must choose category
           public function setCategory($category)
           {
-            if(empty($category)){
+            $this->category = $category;
+            if(empty($this->category)){
               $ex = new ExchooseProduct();
               throw $ex;
               }
-            $this->category = $category;
+            
             return $this;
           }
 
           // validation for input price
           public function validateInputDataPrice($price) 
           {
-            if (!preg_match('/^\d+(\.\d+)?$/', $price)){
+                  $this->price = $price;
+            if (!preg_match('/^\d+(\.\d+)?$/', $this->price)){
                 throw new Exinvalidprice();
             }
           }
@@ -114,8 +127,9 @@ protected $price;
         // validation for name - after strings support numbers
         public function validateInputDataName($name)
         {
+                $this->name = $name;
              $name_pattern = '/^[A-Za-z][A-Za-z0-9\s]*$/';
-          if (!preg_match($name_pattern, $name)){
+          if (!preg_match($name_pattern, $this->name)){
             throw new Exinvalidname();
           }
         }
@@ -124,9 +138,11 @@ protected $price;
           // validation for input size support only whole numbers 
         public function validateInputDataSize($size, $width = null, $height = null, $length = null, $weight = null)
         {
+           $this->size = $size;
+                
           if(($weight == null) && ($width == null) && ($height == null) && ($length == null)){
             $size_pattern = '/^[0-9]+$/'; 
-            if (!preg_match($size_pattern, $size)){
+            if (!preg_match($size_pattern, $this->size)){
               throw new ExinvalidSize();
             } 
           }
@@ -134,11 +150,15 @@ protected $price;
 
 
         // validation for inputs of furniture // support whole numbers and decimal numbers
-        public function validateInputDataFurniture($size = null, $width, $heigh, $length, $weight = null)
+        public function validateInputDataFurniture($size = null, $width, $height, $length, $weight = null)
         {
+                $this->width = $width;
+                $this->height = $height;
+                $this->length = $length;
+                
           if(($size == null) && ($weight == null)){
             $fur_pattern = '/^[0-9]+(?:\.[0-9]+)?$/'; 
-            if (!preg_match($fur_pattern, $width) || !preg_match($fur_pattern, $heigh) || !preg_match($fur_pattern, $length)){
+            if (!preg_match($fur_pattern, $this->width) || !preg_match($fur_pattern, $this->height) || !preg_match($fur_pattern, $this->length)){
               throw new ExinvalidFurnitureInputs();
             }
           }
@@ -148,9 +168,13 @@ protected $price;
         // validation for Weight // support whole numbers and only three decimal numbers after "dot"
         public function validateInputDataWeight($size = null, $width = null, $height = null, $length = null, $weight)
         {
+                $this->weight = $weight;
+                
           if(($size == null) && ($width == null) && ($height == null) && ($length == null)){
+                  
             $weight_pattern = '/^[0-9]+(?:\.[0-9]{1,3})?$/'; 
-            if (!preg_match($weight_pattern, $weight)){
+                  
+            if (!preg_match($weight_pattern, $this->weight)){
               throw new ExinvalidWeight();
             }
           }
@@ -162,22 +186,27 @@ protected $price;
               // checking if is picked one of first three values from drop-down menu// required all data 
           public static function validateForm($category, $sku, $name, $price, $size = null, $width = null, $height = null, $length = null, $weight = null) 
           {
-              $decrypted = decrypt($category);
+              $this->category = $category;
+              $this->sku = $sku;
+              $this->name = $name;
+              $this->price = $price;
+              
+              $decrypted = decrypt($this->category);
 
               if($decrypted === "1") {
-                  if (empty($sku) || empty($name) || empty($price) || empty($size)) {
+                  if (empty($this->sku) || empty($this->name) || empty($this->price) || empty($size)) {
                       throw new ExrequiredData();    
                   }
               }
               
               else if($decrypted === "2") {
-                  if (empty($sku) || empty($name) || empty($price) || empty($width) || empty($height) || empty($length)) {
+                  if (empty($this->sku) || empty($this->name) || empty($this->price) || empty($width) || empty($height) || empty($length)) {
                       throw new ExrequiredData();
                 }
               }
               
               else if($decrypted === "3") {
-                  if (empty($sku) || empty($name) || empty($price) || empty($weight)) {
+                  if (empty($this->sku) || empty($this->name) || empty($this->price) || empty($weight)) {
                       throw new ExrequiredData();
                   }
               }
@@ -189,11 +218,13 @@ protected $price;
             // validation for name must be at least with 6 chars !
             public function setName($name)
             {
-              if(strlen($name) <= 5){  
+              $this->name = $name;
+                    
+              if(strlen($this->name) <= 5){  
                 $ex = new requiredName();
                 throw $ex;
               }
-                $this->name = $name;
+               
                 return $this;
             }
 
@@ -201,10 +232,12 @@ protected $price;
             // if size is empty give null value  
             public static function validateSize($size) 
             {
-              if ($size == '') {
+                    $this->size = $size;
+                    
+              if ($this->size == '') {
                 return NULL;
               }
-               return $size;
+               return $this->size;
             }
             // if fur inputs are empty, then return all as null 
             public static function validateDimensions($height, $width, $length) 
@@ -220,21 +253,25 @@ protected $price;
               // also if is empty weight return null 
               public static function validateWeight($weight) 
               {
-                if ($weight == '') {
+                      $this->weight = $weight;
+                      
+                if ($this->weight == '') {
                   return NULL;
                 }
-                 return $weight;
+                 return $this->weight;
               }
 
 
               // insert categories in db' cat table
             public function insertCategory($categoryname) 
             {
+                    $this->category = $categoryname;
+                    
               $conn = $this->conn;
               $sql_insert = "INSERT INTO category (name) VALUES(:name)";
               $statement = $conn->prepare($sql_insert); // to don't allow sql injection
 
-              $data = ['name' => $categoryname];
+              $data = ['name' => $this->category];
 
               if($statement->execute($data)){
                 return true;
@@ -246,21 +283,33 @@ protected $price;
 
           // adding product in db
           public function addProduct($category, $sku, $name, $price, $description, $size, $height, $width, $length, $weight) {
+                  
+                  $this->category = $category;
+                  $this->sku = $sku;
+                  $this->name = $name;
+                  $this->price = $price;
+                  $this->description = $description;
+                  $this->size = $size;
+                  $this->height = $height;
+                  $this->width = $width;
+                  $this->length = $length;
+                  $this->weight = $weight;
+                  
             $sql = "INSERT INTO products (category_id_fk, sku, name, price, description, size_cd, height_f, width_f, length_f, weight_book) VALUES(:category_param, :sku, :name, :price, :description, :size, :height, :width, :length, :weight)";
 
             $statement = $this->conn->prepare($sql);
 
             $data = [
-              'category_param' => decrypt($category),
-              'sku' => $sku,
-              'name' => $name,
-              'price'  => $price,
-              'description' => $description,
-              'size' => $size,
-              'height' => $height,
-              'width' => $width,
-              'length' => $length,
-              'weight' => $weight
+              'category_param' => decrypt($this->category),
+              'sku' => $this->sku,
+              'name' => $this->name,
+              'price'  => $this->price,
+              'description' => $this->description,
+              'size' => $this->size,
+              'height' => $this->height,
+              'width' => $this->width,
+              'length' => $this->length,
+              'weight' => $this->weight
             ];
 
             if($statement->execute($data)) {
