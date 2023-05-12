@@ -30,9 +30,11 @@ private $name;
 private $price;        
 private $description;        
 private $size;
+
 private  $width;
 private  $height;
 private $length;
+
 private $weight;
 
 
@@ -100,7 +102,7 @@ private $weight;
           }
     
    
-          // firstly must choose category
+          // first must choose category
           public function setCategory($category)
           {
             $this->category = $category;
@@ -138,8 +140,12 @@ private $weight;
         public function validateInputDataSize($size, $width = null, $height = null, $length = null, $weight = null)
         {
            $this->size = $size;
+           $this->width = $width;
+           $this->height = $height;
+           $this->length = $length;
+           $this->weight = $weight;
                 
-          if(($weight == null) && ($width == null) && ($height == null) && ($length == null)){
+          if(($this->weight == null) && ($this->width == null) && ($this->height == null) && ($this->length == null)){
             $size_pattern = '/^[0-9]+$/'; 
             if (!preg_match($size_pattern, $this->size)){
               throw new ExinvalidSize();
@@ -151,11 +157,13 @@ private $weight;
         // validation for inputs of furniture // support whole numbers and decimal numbers
         public function validateInputDataFurniture($size = null, $width, $height, $length, $weight = null)
         {
-                $this->width = $width;
-                $this->height = $height;
-                $this->length = $length;
-                
-          if(($size == null) && ($weight == null)){
+          $this->size = $size;
+          $this->width = $width;
+          $this->height = $height;
+          $this->length = $length;
+          $this->weight = $weight;
+                               
+          if(($this->size == null) && ($this->weight == null)){
             $fur_pattern = '/^[0-9]+(?:\.[0-9]+)?$/'; 
             if (!preg_match($fur_pattern, $this->width) || !preg_match($fur_pattern, $this->height) || !preg_match($fur_pattern, $this->length)){
               throw new ExinvalidFurnitureInputs();
@@ -167,9 +175,13 @@ private $weight;
         // validation for Weight // support whole numbers and only three decimal numbers after "dot"
         public function validateInputDataWeight($size = null, $width = null, $height = null, $length = null, $weight)
         {
-                $this->weight = $weight;
+          $this->size = $size;
+          $this->width = $width;
+          $this->height = $height;
+          $this->length = $length;
+          $this->weight = $weight;
                 
-          if(($size == null) && ($width == null) && ($height == null) && ($length == null)){
+          if(($this->size == null) && ($this->width == null) && ($this->height == null) && ($this->length == null)){
                   
             $weight_pattern = '/^[0-9]+(?:\.[0-9]{1,3})?$/'; 
                   
@@ -189,23 +201,28 @@ private $weight;
               $this->sku = $sku;
               $this->name = $name;
               $this->price = $price;
+              $this->size = $size;
+              $this->width = $width;
+              $this->height = $height;
+              $this->length = $length;
+              $this->weight = $weight;
               
               $decrypted = decrypt($this->category);
 
               if($decrypted === "1") {
-                  if (empty($this->sku) || empty($this->name) || empty($this->price) || empty($size)) {
+                  if (empty($this->sku) || empty($this->name) || empty($this->price) || empty($this->size)) {
                       throw new ExrequiredData();    
                   }
               }
               
               else if($decrypted === "2") {
-                  if (empty($this->sku) || empty($this->name) || empty($this->price) || empty($width) || empty($height) || empty($length)) {
+                  if (empty($this->sku) || empty($this->name) || empty($this->price) || empty($this->width) || empty($this->height) || empty($this->length)) {
                       throw new ExrequiredData();
                 }
               }
               
               else if($decrypted === "3") {
-                  if (empty($this->sku) || empty($this->name) || empty($this->price) || empty($weight)) {
+                  if (empty($this->sku) || empty($this->name) || empty($this->price) || empty($this->weight)) {
                       throw new ExrequiredData();
                   }
               }
@@ -284,7 +301,8 @@ private $weight;
 
 
           // adding product in db
-          public function addProduct($category, $sku, $name, $price, $description, $size, $height, $width, $length, $weight) {
+          public function addProduct($category, $sku, $name, $price, $description, $size, $height, $width, $length, $weight) 
+          {
                   
                   $this->category = $category;
                   $this->sku = $sku;
@@ -341,5 +359,7 @@ private $weight;
             $statement = $conn->query($sql_select);
             return $statement;
           }
+} 
+?>
 
-} ?>
+          
